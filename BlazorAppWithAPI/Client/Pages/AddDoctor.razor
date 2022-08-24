@@ -1,0 +1,54 @@
+﻿@*<h3>AddDoctor</h3>*@
+
+@page "/adddoctor"
+
+@using BlazorAppWithAPI.Shared
+
+@inject NavigationManager NavigationManager
+@inject HttpClient Http
+
+<h2>Create Doctor</h2>
+<hr />
+<form>
+    <div class="row">
+        <div class="col-md-8">
+            <div class="form-group">
+                <label for="Name" class="control-label">Name</label>
+                <input for="Name" class="form-control" @bind="doc.Name"/>
+            </div>
+            <div>
+                <label for="Registration" class="control-label">Registration No.</label>
+                <input for="Registration" class="form-control" @bind="doc.Registration"/>
+            </div>
+            <div>
+                <label for="DateofIssue" class="control-label">DateofIssue</label>
+                <input for="DateofIssue" class="form-control" @bind="doc.DateofIssue"/>
+            </div>
+            <div>
+                <label for="DateofValid" class="control-label">DateofValid</label>
+                <input for="DateofValid" class="form-control" @bind="doc.DateofValid"/>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-8">
+            <div class="form-group">
+                <input type="button" class="btn btn-primary" @onclick="@CreateDoctor" value="Save"/>
+                <input type="button" class="btn btn-outline-danger" @onclick="@Cancel" value="Cancel"/>
+            </div>
+        </div>
+    </div>
+</form>
+
+@code {
+    Doctor doc = new Doctor();
+    protected async Task CreateDoctor()
+    {
+        await Http.PostJsonAsync("http://localhost:56621/api/Registration",doc);
+        NavigationManager.NavigateTo("doctorList");
+    }
+    void Cancel()
+    {
+        NavigationManager.NavigateTo("doctorList");
+    }
+}

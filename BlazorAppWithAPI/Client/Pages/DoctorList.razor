@@ -1,0 +1,53 @@
+﻿@*<h3>DoctorList</h3>*@
+
+@page "/doctorList"
+
+@using BlazorAppWithAPI.Shared
+
+@inject NavigationManager NavigationManager
+@inject HttpClient Http
+
+<h2>Doctor Details</h2>
+<p>
+    <a href="/adddoctor">Create New Doctor</a>
+</p>
+@if(docList == null)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Registration</th>
+                <th>DateofIssue</th>
+                <th>DateofValid</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach(var doc in docList)
+            {
+                <tr>
+                    <td>@doc.Name</td>
+                    <td>@doc.Registration</td>
+                    <td>@doc.DateofIssue</td>
+                    <td>@doc.DateofValid</td>
+                    <td>
+                        <a class="oi oi-pencil btn-info btn-sm" href="/editdoctor/@doc.Id"></a>
+                        <a class="oi oi-trash btn-danger btn-sm" href="/deletedoctor/@doc.Id"></a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    Doctor[] docList;
+
+    protected override async Task OnInitializedAsync() => await LoadData();
+
+    protected async Task LoadData() => docList = await Http.GetFromJsonAsync<Doctor[]>($"http://localhost:56621/api/Registration");
+}

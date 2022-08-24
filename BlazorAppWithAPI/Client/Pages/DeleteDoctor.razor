@@ -1,0 +1,58 @@
+﻿@*<h3>DeleteDoctor</h3>*@
+
+@page "/deletedoctor/{id}"
+
+@using BlazorAppWithAPI.Shared
+
+@inject NavigationManager NavigationManager
+@inject HttpClient Http
+
+<h2>Delete Doctor</h2>
+<p>Are you sure to delete this Doctor with Id :<b>@id</b></p>
+<br />
+<div class="col-md-4">
+    <table>
+        <tr>
+            <td>Name</td>
+            <td>@doc.Name</td>
+        </tr>
+        <tr>
+            <td>Registration</td>
+            <td>@doc.Registration</td>
+        </tr>
+        <tr>
+            <td>DateofIssue</td>
+            <td>@doc.DateofIssue</td>
+        </tr>
+        <tr>
+            <td>DateofValid</td>
+            <td>@doc.DateofValid</td>
+        </tr>
+    </table>
+    <div class="form-group">
+        <input type="button" class="btn btn-primary" @onclick="@Delete" value="Delete"/>
+        <input type="button" class="btn btn-outline-danger" @onclick="@Cancel" value="Cancel"/>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public string id{ get; set; }
+
+    Doctor doc = new Doctor();
+
+    protected override async Task OnInitializedAsync()
+    {
+        doc = await Http.GetJsonAsync<Doctor>("http://localhost:56621/api/Registration/"+id);
+    }
+
+    protected async Task Delete()
+    {
+        await Http.DeleteAsync("http://localhost:56621/api/Registration/"+id);
+        NavigationManager.NavigateTo("doctorList");
+    }
+    void Cancel()
+    {
+        NavigationManager.NavigateTo("doctorList");
+    }
+}
